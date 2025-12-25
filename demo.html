@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メルアシ PRO - デモ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF4B4B;
+      --primary-dark: #E53935;
+      --accent-yellow: #FFE566;
+      --accent-mint: #7FEFBD;
+      --accent-sky: #7EB6FF;
+      --accent-pink: #FFB4E1;
+      --accent-purple: #C4B5FD;
+      --white: #FFFDF7;
+      --black: #1A1A2E;
+      --gray-100: #F5F3EF;
+      --gray-200: #E8E5DE;
+      --gray-400: #9C9789;
+      --gray-600: #5C584F;
+      --shadow-brutal: 4px 4px 0px var(--black);
+      --shadow-brutal-sm: 2px 2px 0px var(--black);
+      --shadow-brutal-lg: 6px 6px 0px var(--black);
+      --border: 3px solid var(--black);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 100px;
+      --font-display: 'Dela Gothic One', cursive;
+      --font-body: 'Zen Maru Gothic', sans-serif;
+      --transition: 0.15s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      min-height: 100vh;
+      background: 
+        radial-gradient(circle at 20% 80%, var(--accent-pink) 0%, transparent 20%),
+        radial-gradient(circle at 80% 20%, var(--accent-sky) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, var(--accent-yellow) 0%, transparent 15%),
+        var(--white);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    /* Info Card */
+    .info-card {
+      max-width: 340px;
+      padding: 28px;
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 8px 8px 0px var(--black);
+    }
+
+    .info-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .info-badge {
+      display: inline-block;
+      background: var(--accent-mint);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-full);
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .info-text {
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 2px dashed var(--gray-200);
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    .feature-list li:last-child { border-bottom: none; }
+
+    .feature-icon {
+      width: 28px; height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-yellow);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+    }
+
+    .new-badge {
+      background: var(--primary);
+      color: var(--white);
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      margin-left: auto;
+    }
+
+    .info-note {
+      font-size: 11px;
+      color: var(--gray-400);
+      padding: 10px;
+      background: var(--gray-100);
+      border-radius: var(--radius-sm);
+    }
+
+    /* Popup Container */
+    .popup-wrapper {
+      position: relative;
+    }
+
+    .popup-label {
+      position: absolute;
+      top: -14px;
+      left: 20px;
+      background: var(--primary);
+      color: var(--white);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-full);
+      padding: 4px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      transform: rotate(-3deg);
+      z-index: 10;
+    }
+
+    .popup-container {
+      width: 380px;
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 8px 8px 0px var(--black);
+      overflow: hidden;
+    }
+
+    /* ===== POPUP STYLES ===== */
+    .app {
+      position: relative;
+      padding: 16px;
+      min-height: 540px;
+    }
+
+    .bg-shapes {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .shape {
+      position: absolute;
+      border: var(--border);
+      opacity: 0.4;
+    }
+
+    .shape-1 {
+      width: 100px; height: 100px;
+      background: var(--accent-yellow);
+      border-radius: 50%;
+      top: -30px; right: -20px;
+    }
+
+    .shape-2 {
+      width: 60px; height: 60px;
+      background: var(--accent-mint);
+      top: 180px; left: -20px;
+    }
+
+    .shape-3 {
+      width: 50px; height: 50px;
+      background: var(--accent-pink);
+      border-radius: 50%;
+      bottom: 150px; right: -15px;
+    }
+
+    .header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: var(--primary);
+      border: var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-brutal-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--white);
+      transform: rotate(-3deg);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .logo-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+    }
+
+    .logo-badge {
+      background: var(--accent-yellow);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-full);
+      padding: 1px 8px;
+      font-size: 9px;
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--accent-mint);
+      border: var(--border);
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-brutal-sm);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .status-pulse {
+      width: 8px; height: 8px;
+      background: var(--black);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    /* Main Action */
+    .main-action {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 14px;
+    }
+
+    .big-action-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--primary);
+      color: var(--white);
+      border: var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-brutal-lg);
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-body);
+    }
+
+    .big-action-btn:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 10px 10px 0px var(--black);
+    }
+
+    .big-action-btn:active {
+      transform: translate(0, 0);
+      box-shadow: var(--shadow-brutal-sm);
+    }
+
+    .big-btn-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .big-btn-emoji {
+      font-size: 28px;
+      animation: fireWiggle 1s ease infinite;
+    }
+
+    @keyframes fireWiggle {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+
+    .big-btn-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .big-btn-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+    }
+
+    .big-btn-sub { font-size: 12px; opacity: 0.9; }
+
+    .big-btn-arrow {
+      font-size: 24px;
+      font-weight: 700;
+      transition: var(--transition);
+    }
+
+    .big-action-btn:hover .big-btn-arrow {
+      transform: translateX(4px);
+    }
+
+    /* Progress */
+    .progress-container {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--gray-100);
+      border: var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .progress-container.active {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: var(--gray-200);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-mint), var(--accent-sky));
+      transition: width 0.3s ease;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+
+    .progress-text { color: var(--gray-600); }
+    .progress-count { font-weight: 700; }
+
+    /* Stats */
+    .stats-row {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      box-shadow: var(--shadow-brutal-sm);
+      transition: var(--transition);
+    }
+
+    .stat-card.clickable {
+      cursor: pointer;
+      background: var(--accent-sky);
+    }
+
+    .stat-card.clickable:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-brutal);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .stat-emoji { font-size: 16px; }
+
+    .stat-trend {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      background: var(--accent-mint);
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--gray-400);
+    }
+
+    .stat-chart {
+      height: 20px;
+      margin-top: 6px;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: var(--accent-mint);
+      border: 1px solid var(--black);
+      border-radius: 2px;
+      min-height: 4px;
+    }
+
+    /* Cards */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-brutal);
+      margin-bottom: 10px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: var(--border);
+      background: var(--gray-100);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    /* Settings */
+    .settings-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .setting-label {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .price-selector {
+      display: flex;
+      gap: 4px;
+    }
+
+    .price-btn {
+      padding: 6px 10px;
+      background: var(--gray-100);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-full);
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .price-btn:hover { background: var(--gray-200); }
+    .price-btn.active { background: var(--primary); color: var(--white); }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .input-pill {
+      width: 70px;
+      padding: 6px 10px;
+      background: var(--gray-100);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-full);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .input-pill:focus {
+      outline: none;
+      background: var(--accent-yellow);
+    }
+
+    .input-unit {
+      font-size: 11px;
+      color: var(--gray-400);
+    }
+
+    /* Switch */
+    .switch {
+      position: relative;
+      width: 48px; height: 26px;
+    }
+
+    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .switch-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--gray-200);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-full);
+      transition: var(--transition);
+    }
+
+    .switch-knob {
+      position: absolute;
+      height: 18px; width: 18px;
+      left: 2px; bottom: 2px;
+      background: var(--white);
+      border: 2px solid var(--black);
+      border-radius: 50%;
+      transition: var(--transition);
+      box-shadow: 1px 1px 0px var(--black);
+    }
+
+    .switch input:checked + .switch-slider {
+      background: var(--accent-mint);
+    }
+
+    .switch input:checked + .switch-slider .switch-knob {
+      transform: translateX(22px);
+    }
+
+    .auto-settings {
+      padding: 10px 12px;
+    }
+
+    .select-pill {
+      padding: 6px 10px;
+      background: var(--gray-100);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-full);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .setting-suffix {
+      font-size: 11px;
+      color: var(--gray-400);
+    }
+
+    /* Activity */
+    .activity-feed {
+      max-height: 100px;
+      overflow-y: auto;
+    }
+
+    .activity-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      gap: 6px;
+    }
+
+    .empty-illustration {
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .empty-icon {
+      font-size: 32px;
+      animation: rocketBounce 2s ease infinite;
+    }
+
+    @keyframes rocketBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .empty-sparkles {
+      position: absolute;
+      top: -5px; right: -10px;
+      font-size: 16px;
+      animation: sparkle 1.5s ease infinite;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    .empty-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+    }
+
+    .empty-text {
+      font-size: 11px;
+      color: var(--gray-400);
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+
+    .activity-icon {
+      width: 32px; height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-yellow);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+    }
+
+    .activity-title { font-size: 12px; font-weight: 700; }
+    .activity-meta { font-size: 10px; color: var(--gray-400); }
+
+    /* Footer */
+    .footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+    }
+
+    .footer-version {
+      font-size: 10px;
+      color: var(--gray-400);
+    }
+
+    .footer-links { display: flex; gap: 6px; }
+
+    .footer-btn {
+      width: 28px; height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-100);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .footer-btn:hover {
+      background: var(--accent-purple);
+      transform: rotate(-5deg);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(26, 26, 46, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-brutal-lg);
+      padding: 24px;
+      max-width: 320px;
+      text-align: center;
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from { transform: scale(0.9) translateY(20px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .modal-icon { font-size: 40px; margin-bottom: 12px; }
+    .modal-title { font-family: var(--font-display); font-size: 16px; margin-bottom: 8px; }
+    .modal-desc { font-size: 13px; color: var(--gray-600); margin-bottom: 16px; }
+    .modal-desc strong { color: var(--primary); }
+
+    .modal-info {
+      background: var(--gray-100);
+      border: 2px solid var(--black);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .modal-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .modal-info-item span { font-size: 11px; color: var(--gray-400); }
+    .modal-info-item strong { font-family: var(--font-display); font-size: 14px; }
+
+    .modal-actions { display: flex; gap: 10px; }
+
+    .modal-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: var(--border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .modal-btn.cancel { background: var(--gray-100); }
+    .modal-btn.cancel:hover { background: var(--gray-200); }
+
+    .modal-btn.confirm {
+      background: var(--primary);
+      color: var(--white);
+      box-shadow: var(--shadow-brutal-sm);
+    }
+
+    .modal-btn.confirm:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-brutal);
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+
+    .toast {
+      padding: 14px 24px;
+      background: var(--black);
+      color: var(--white);
+      border: var(--border);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      animation: toastIn 0.3s ease;
+      box-shadow: var(--shadow-brutal);
+    }
+
+    .toast.success { background: var(--accent-mint); color: var(--black); }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes toastOut {
+      to { transform: translateY(20px); opacity: 0; }
+    }
+
+    .loading { pointer-events: none; opacity: 0.7; }
+
+    @media (max-width: 850px) {
+      body { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Info Card -->
+  <div class="info-card">
+    <h1 class="info-title">🎮 デモモード v2</h1>
+    <div class="info-badge">✨ 全機能テスト可</div>
+    <p class="info-text">
+      改善されたUIで新機能を体験！<br>
+      ボタンをクリックして動作確認できます。
+    </p>
+    <ul class="feature-list">
+      <li>
+        <span class="feature-icon">⚠️</span>
+        <span>確認ダイアログ</span>
+        <span class="new-badge">NEW</span>
+      </li>
+      <li>
+        <span class="feature-icon">📊</span>
+        <span>プログレスバー</span>
+        <span class="new-badge">NEW</span>
+      </li>
+      <li>
+        <span class="feature-icon">💴</span>
+        <span>値下げ金額選択</span>
+        <span class="new-badge">NEW</span>
+      </li>
+      <li>
+        <span class="feature-icon">📈</span>
+        <span>ミニグラフ</span>
+        <span class="new-badge">NEW</span>
+      </li>
+      <li>
+        <span class="feature-icon">🚀</span>
+        <span>改善された空状態</span>
+        <span class="new-badge">NEW</span>
+      </li>
+    </ul>
+    <p class="info-note">
+      ※ 実際のメルカリ連携は拡張機能インストール後に有効
+    </p>
+  </div>
+
+  <!-- Popup Preview -->
+  <div class="popup-wrapper">
+    <div class="popup-label">👀 プレビュー</div>
+    <div class="popup-container">
+      <div class="app">
+        <div class="bg-shapes">
+          <div class="shape shape-1"></div>
+          <div class="shape shape-2"></div>
+          <div class="shape shape-3"></div>
+        </div>
+
+        <header class="header">
+          <div class="logo">
+            <div class="logo-icon"><span>M</span></div>
+            <div class="logo-text">
+              <span class="logo-title">メルアシ</span>
+              <span class="logo-badge">PRO</span>
+            </div>
+          </div>
+          <div class="status-chip" id="statusChip">
+            <span class="status-pulse"></span>
+            <span class="status-label">Ready</span>
+          </div>
+        </header>
+
+        <section class="main-action">
+          <button class="big-action-btn" id="priceDownBtn">
+            <div class="big-btn-left">
+              <span class="big-btn-emoji">🔥</span>
+              <div class="big-btn-text">
+                <span class="big-btn-title">一括値下げ</span>
+                <span class="big-btn-sub" id="priceDownLabel">-¥100で実行</span>
+              </div>
+            </div>
+            <div class="big-btn-arrow">→</div>
+          </button>
+          <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-info">
+              <span class="progress-text" id="progressText">処理中...</span>
+              <span class="progress-count" id="progressCount">0/0</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats-row">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-emoji">📦</span>
+              <span class="stat-trend" id="itemsTrend">+3</span>
+            </div>
+            <div class="stat-value" id="totalItems">0</div>
+            <div class="stat-label">出品中</div>
+            <div class="stat-chart" id="itemsChart"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-emoji">💰</span>
+              <span class="stat-trend" id="salesTrend">+12%</span>
+            </div>
+            <div class="stat-value" id="totalSales">¥0</div>
+            <div class="stat-label">売上見込</div>
+            <div class="stat-chart" id="salesChart"></div>
+          </div>
+          <div class="stat-card clickable" id="analyzeBtn">
+            <div class="stat-header">
+              <span class="stat-emoji">📊</span>
+            </div>
+            <div class="stat-value">分析</div>
+            <div class="stat-label">タップで更新</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⚙️ 値下げ設定</div>
+          </div>
+          <div class="settings-body">
+            <div class="setting-row">
+              <span class="setting-label">💴 値下げ金額</span>
+              <div class="price-selector">
+                <button class="price-btn" data-price="50">-50</button>
+                <button class="price-btn active" data-price="100">-100</button>
+                <button class="price-btn" data-price="200">-200</button>
+                <button class="price-btn" data-price="500">-500</button>
+              </div>
+            </div>
+            <div class="setting-row">
+              <span class="setting-label">🛡️ 最低価格</span>
+              <div class="input-group">
+                <input type="number" class="input-pill" value="500" id="minPrice">
+                <span class="input-unit">円以下は除外</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⚡ オートモード</div>
+            <label class="switch">
+              <input type="checkbox" id="autoPrice">
+              <span class="switch-slider"><span class="switch-knob"></span></span>
+            </label>
+          </div>
+          <div class="auto-settings">
+            <div class="setting-row">
+              <span class="setting-label">🕐 毎日</span>
+              <select class="select-pill"><option>12:00</option></select>
+              <span class="setting-suffix">に自動実行</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">📝 アクティビティ</div>
+          </div>
+          <div class="activity-feed" id="activityList">
+            <div class="activity-empty" id="activityEmpty">
+              <div class="empty-illustration">
+                <span class="empty-icon">🚀</span>
+                <div class="empty-sparkles">✨</div>
+              </div>
+              <span class="empty-title">はじめよう！</span>
+              <span class="empty-text">上のボタンで値下げ or 分析</span>
+            </div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <span class="footer-version">v1.0.0</span>
+          <div class="footer-links">
+            <button class="footer-btn">⚙️</button>
+            <button class="footer-btn">❓</button>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal">
+      <div class="modal-icon">⚠️</div>
+      <h3 class="modal-title">値下げを実行しますか？</h3>
+      <p class="modal-desc" id="modalDesc">出品中の商品を<strong>¥100</strong>値下げします</p>
+      <div class="modal-info">
+        <div class="modal-info-item">
+          <span>対象商品</span>
+          <strong id="modalItemCount">8件</strong>
+        </div>
+        <div class="modal-info-item">
+          <span>最低価格</span>
+          <strong id="modalMinPrice">¥500</strong>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="modalCancel">キャンセル</button>
+        <button class="modal-btn confirm" id="modalConfirm">実行する</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    let state = { 
+      totalItems: 0, 
+      totalSales: 0, 
+      priceDown: 100,
+      activities: [],
+      chartData: { items: [3,5,4,6,8,7,9], sales: [40,55,45,70,85,75,90] }
+    };
+
+    // 初期化
+    renderCharts();
+
+    // 値下げボタン → モーダル表示
+    document.getElementById('priceDownBtn').addEventListener('click', () => {
+      document.getElementById('modalDesc').innerHTML = `出品中の商品を<strong>¥${state.priceDown}</strong>値下げします`;
+      document.getElementById('modalItemCount').textContent = `${Math.floor(Math.random()*10)+5}件`;
+      document.getElementById('modalMinPrice').textContent = `¥${document.getElementById('minPrice').value}`;
+      document.getElementById('confirmModal').classList.add('active');
+    });
+
+    // モーダルキャンセル
+    document.getElementById('modalCancel').addEventListener('click', () => {
+      document.getElementById('confirmModal').classList.remove('active');
+    });
+
+    document.getElementById('confirmModal').addEventListener('click', (e) => {
+      if (e.target.id === 'confirmModal') {
+        document.getElementById('confirmModal').classList.remove('active');
+      }
+    });
+
+    // モーダル確認 → 実行
+    document.getElementById('modalConfirm').addEventListener('click', async () => {
+      document.getElementById('confirmModal').classList.remove('active');
+      
+      const btn = document.getElementById('priceDownBtn');
+      btn.classList.add('loading');
+      setStatus('処理中...', 'busy');
+      
+      const prog = document.getElementById('progressContainer');
+      prog.classList.add('active');
+      
+      const total = Math.floor(Math.random()*8)+5;
+      
+      for (let i = 1; i <= total; i++) {
+        document.getElementById('progressFill').style.width = `${(i/total)*100}%`;
+        document.getElementById('progressText').textContent = `商品 ${i}/${total} を処理中...`;
+        document.getElementById('progressCount').textContent = `${i}/${total}`;
+        await sleep(300);
+      }
+      
+      state.totalItems = total;
+      animateNumber(document.getElementById('totalItems'), total);
+      state.totalSales = total * (Math.floor(Math.random()*2000)+1000);
+      document.getElementById('totalSales').textContent = `¥${state.totalSales.toLocaleString()}`;
+      
+      updateCharts();
+      showToast(`🔥 ${total}件 値下げ完了！`, 'success');
+      addActivity('値下げ実行', `${total}件を-¥${state.priceDown}`);
+      
+      prog.classList.remove('active');
+      btn.classList.remove('loading');
+      setStatus('Ready', 'ready');
+    });
+
+    // 分析ボタン
+    document.getElementById('analyzeBtn').addEventListener('click', async () => {
+      const card = document.getElementById('analyzeBtn');
+      card.classList.add('loading');
+      setStatus('分析中...', 'busy');
+      
+      await sleep(800);
+      
+      const total = Math.floor(Math.random()*15)+5;
+      state.totalItems = total;
+      state.totalSales = total * (Math.floor(Math.random()*3000)+1000);
+      
+      animateNumber(document.getElementById('totalItems'), total);
+      document.getElementById('totalSales').textContent = `¥${state.totalSales.toLocaleString()}`;
+      
+      updateCharts();
+      showToast('📊 分析完了！', 'success');
+      addActivity('出品分析', `${total}件を分析`);
+      
+      card.classList.remove('loading');
+      setStatus('Ready', 'ready');
+    });
+
+    // 値下げ金額選択
+    document.querySelectorAll('.price-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.priceDown = parseInt(btn.dataset.price);
+        document.getElementById('priceDownLabel').textContent = `-¥${state.priceDown}で実行`;
+      });
+    });
+
+    // オートモード
+    document.getElementById('autoPrice').addEventListener('change', function() {
+      showToast(this.checked ? '⚡ オートモード ON！' : 'オートモード OFF', this.checked ? 'success' : 'default');
+      if (this.checked) addActivity('設定変更', 'オートモードを有効化');
+    });
+
+    function setStatus(text, type) {
+      const chip = document.getElementById('statusChip');
+      chip.querySelector('.status-label').textContent = text;
+      chip.style.background = type === 'busy' ? 'var(--accent-yellow)' : 'var(--accent-mint)';
+    }
+
+    function addActivity(title, desc) {
+      const now = new Date();
+      const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+      state.activities.unshift({ title, desc, time });
+      if (state.activities.length > 5) state.activities.pop();
+      
+      document.getElementById('activityEmpty').style.display = 'none';
+      const iconMap = { '値下げ実行':'🔥', '出品分析':'📊', '設定変更':'⚙️' };
+      document.getElementById('activityList').innerHTML = state.activities.map(a => `
+        <div class="activity-item">
+          <div class="activity-icon">${iconMap[a.title]||'📝'}</div>
+          <div class="activity-content">
+            <div class="activity-title">${a.title}</div>
+            <div class="activity-meta">${a.desc} • ${a.time}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderCharts() {
+      renderChart('itemsChart', state.chartData.items, '--accent-mint');
+      renderChart('salesChart', state.chartData.sales, '--accent-yellow');
+    }
+
+    function renderChart(id, data, color) {
+      const max = Math.max(...data);
+      document.getElementById(id).innerHTML = data.map(v => 
+        `<div class="chart-bar" style="height:${(v/max)*100}%;background:var(${color})"></div>`
+      ).join('');
+    }
+
+    function updateCharts() {
+      state.chartData.items.shift();
+      state.chartData.items.push(state.totalItems || Math.floor(Math.random()*10)+3);
+      state.chartData.sales.shift();
+      state.chartData.sales.push(Math.floor(Math.random()*50)+50);
+      renderCharts();
+    }
+
+    function animateNumber(el, target) {
+      const current = parseInt(el.textContent) || 0;
+      const diff = target - current;
+      let step = 0;
+      const timer = setInterval(() => {
+        step++;
+        el.textContent = Math.round(current + diff*step/20);
+        if (step >= 20) { clearInterval(timer); el.textContent = target; }
+      }, 25);
+    }
+
+    function showToast(msg, type) {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = msg;
+      document.getElementById('toastContainer').appendChild(toast);
+      setTimeout(() => {
+        toast.style.animation = 'toastOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  </script>
+</body>
+</html>

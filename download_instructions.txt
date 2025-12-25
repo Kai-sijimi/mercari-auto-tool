@@ -1,0 +1,34 @@
+# ダウンロード方法
+
+プロジェクトは /home/user/mercari-auto-tool/ にあります。
+
+## 方法1: 個別ファイルをコピー
+
+以下のコマンドでファイルを表示してコピーしてください：
+
+cat manifest.json
+cat popup.html
+cat popup.css
+cat popup.js
+cat content.js
+cat content.css
+cat background.js
+cat README.md
+cat CURSOR_GUIDE.md
+cat .cursorrules
+
+## 方法2: GitHub等で共有
+
+1. GitHub にリポジトリを作成
+2. 以下のコマンドで初期化：
+
+git init
+git add .
+git commit -m "feat: initial prototype"
+git remote add origin YOUR_REPO_URL
+git push -u origin main
+
+## 方法3: ファイルの内容を直接見る
+
+Read ツールで各ファイルを表示できます。
+例: /home/user/mercari-auto-tool/popup.html

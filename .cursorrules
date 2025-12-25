@@ -1,0 +1,161 @@
+# メルカリ出品アシスタント Chrome拡張機能 - Cursor Rules
+
+## プロジェクト概要
+メルカリの出品管理を効率化するChrome拡張機能（Manifest V3）
+
+## 技術スタック
+- Vanilla JavaScript（フレームワーク不使用）
+- Chrome Extension API (Manifest V3)
+- UI UX Pro Max デザインシステム
+- CSS3（カスタムプロパティ使用）
+
+## コーディング規約
+
+### JavaScript
+- ES6+構文を使用
+- async/awaitを優先（Promise.thenは避ける）
+- 関数は小さく保つ（1関数1責任）
+- エラーハンドリングは必須（try-catch）
+- コメントは日本語OK
+
+### CSS
+- CSS変数（:root）を活用
+- BEM命名規則は不要（シンプルなクラス名）
+- レスポンシブ不要（380px固定幅）
+- アニメーションはtransitionを優先
+
+### Chrome Extension
+- Manifest V3の最新仕様に従う
+- Content ScriptはDOM操作のみ
+- Background ScriptはService Workerとして実装
+- メッセージパッシングで通信
+
+## ファイル構造
+```
+mercari-auto-tool/
+├── manifest.json       # 拡張機能設定
+├── popup.html/css/js   # メインUI
+├── content.js/css      # メルカリページ用
+├── background.js       # バックグラウンド処理
+└── icons/              # アイコン画像
+```
+
+## 開発の優先順位
+
+### Phase 1: 実装完成（今ここ → 次）
+1. メルカリDOM操作の実装
+2. 実際の値下げ処理
+3. エラーハンドリング強化
+
+### Phase 2: 機能拡張
+1. 再出品機能
+2. 価格提案AI（OpenAI API）
+3. 複数アカウント対応
+
+### Phase 3: 収益化
+1. Stripe統合
+2. ライセンス管理
+3. Chrome Web Store公開
+
+## 重要な制約
+
+### 規約遵守
+- メルカリの利用規約を遵守する
+- レート制限: 1秒1リクエスト
+- 過度な自動化は避ける
+- ユーザー操作の補助として設計
+
+### セキュリティ
+- XSS対策（innerHTML禁止、textContentを使用）
+- CSP準拠（inline scriptなし）
+- ユーザーデータは暗号化して保存
+
+### パフォーマンス
+- DOM操作は最小限
+- イベントリスナーの適切な削除
+- メモリリーク防止
+
+## 次に実装すべき機能
+
+### 1. 実際のDOM操作（最優先）
+```javascript
+// content.js に実装
+// メルカリの出品一覧から商品を取得
+// 値下げボタンを自動クリック
+```
+
+### 2. レート制限
+```javascript
+// utils.js を作成
+class RateLimiter {
+  constructor(maxRequests, timeWindow) {
+    this.queue = [];
+    this.maxRequests = maxRequests;
+    this.timeWindow = timeWindow;
+  }
+  
+  async execute(fn) {
+    // キュー処理実装
+  }
+}
+```
+
+### 3. エラーハンドリング
+```javascript
+// 通信エラー
+// DOM変更エラー
+// 認証エラー
+```
+
+## デバッグ方法
+
+### ポップアップ
+1. 拡張機能アイコンを右クリック
+2. 「ポップアップを検証」
+
+### Content Script
+1. メルカリページでF12
+2. Consoleタブでログ確認
+
+### Background Script
+1. chrome://extensions/
+2. 「service worker」をクリック
+
+## UI UX Pro Max 準拠
+
+### カラーパレット
+```css
+--primary: #4ECDC4 (ティールブルー)
+--secondary: #FF6B6B (コーラル)
+--bg-primary: #FFFFFF
+--text-primary: #2D3748
+```
+
+### スタイル
+- Minimalism + Glassmorphism
+- Bento Grid レイアウト
+- スムーズなアニメーション（0.2s ease）
+
+## コミット規約
+```
+feat: 新機能追加
+fix: バグ修正
+docs: ドキュメント更新
+style: コードフォーマット
+refactor: リファクタリング
+test: テスト追加
+```
+
+## AI への指示
+
+Cursorで作業する際:
+1. **既存コードを尊重** - UI/UXデザインは変更しない
+2. **段階的実装** - 小さい機能から順に
+3. **テスト可能なコード** - console.logで動作確認
+4. **日本語コメント** - 将来の自分が理解できるように
+5. **規約遵守** - メルカリの利用規約を守る
+
+## 参考URL
+- Chrome Extension Docs: https://developer.chrome.com/docs/extensions/
+- Manifest V3: https://developer.chrome.com/docs/extensions/mv3/intro/
+- メルカリ: https://jp.mercari.com/

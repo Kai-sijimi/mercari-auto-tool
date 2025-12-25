@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メルアシ PRO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Background Shapes -->
+    <div class="bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon"><span>M</span></div>
+        <div class="logo-text">
+          <span class="logo-title">メルアシ</span>
+          <span class="logo-badge">PRO</span>
+        </div>
+      </div>
+      <button class="status-chip" id="statusChip">
+        <span class="status-pulse"></span>
+        <span class="status-label">Ready</span>
+      </button>
+    </header>
+
+    <!-- Main Action (値下げボタンを最優先に) -->
+    <section class="main-action">
+      <button class="big-action-btn" id="priceDownBtn">
+        <div class="big-btn-left">
+          <span class="big-btn-emoji">🔥</span>
+          <div class="big-btn-text">
+            <span class="big-btn-title">一括値下げ</span>
+            <span class="big-btn-sub" id="priceDownLabel">-¥100で実行</span>
+          </div>
+        </div>
+        <div class="big-btn-arrow">→</div>
+      </button>
+      
+      <!-- Progress Bar (処理中に表示) -->
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-info">
+          <span class="progress-text" id="progressText">処理中...</span>
+          <span class="progress-count" id="progressCount">0/0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Cards (コンパクトに) -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-emoji">📦</span>
+          <span class="stat-trend up" id="itemsTrend">+3</span>
+        </div>
+        <div class="stat-value" id="totalItems">0</div>
+        <div class="stat-label">出品中</div>
+        <div class="stat-chart" id="itemsChart"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-emoji">💰</span>
+          <span class="stat-trend up" id="salesTrend">+12%</span>
+        </div>
+        <div class="stat-value" id="totalSales">¥0</div>
+        <div class="stat-label">売上見込</div>
+        <div class="stat-chart" id="salesChart"></div>
+      </div>
+      <div class="stat-card clickable" id="analyzeBtn">
+        <div class="stat-header">
+          <span class="stat-emoji">📊</span>
+        </div>
+        <div class="stat-value analyze-text">分析</div>
+        <div class="stat-label">タップして更新</div>
+      </div>
+    </section>
+
+    <!-- Settings Card -->
+    <section class="card settings-card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>⚙️</span>
+          <span>値下げ設定</span>
+        </div>
+      </div>
+      <div class="settings-body">
+        <div class="setting-row">
+          <span class="setting-label">💴 値下げ金額</span>
+          <div class="price-selector">
+            <button class="price-btn" data-price="50">-50</button>
+            <button class="price-btn active" data-price="100">-100</button>
+            <button class="price-btn" data-price="200">-200</button>
+            <button class="price-btn" data-price="500">-500</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <span class="setting-label">🛡️ 最低価格</span>
+          <div class="input-group">
+            <input type="number" id="minPrice" class="input-pill" value="500">
+            <span class="input-unit">円以下は除外</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Auto Mode Card -->
+    <section class="card auto-card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>⚡</span>
+          <span>オートモード</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="autoPrice">
+          <span class="switch-slider">
+            <span class="switch-knob"></span>
+          </span>
+        </label>
+      </div>
+      <div class="auto-settings" id="autoSettings">
+        <div class="setting-row">
+          <span class="setting-label">🕐 毎日</span>
+          <select id="scheduleTime" class="select-pill">
+            <option value="00:00">0:00</option>
+            <option value="06:00">6:00</option>
+            <option value="12:00" selected>12:00</option>
+            <option value="18:00">18:00</option>
+            <option value="21:00">21:00</option>
+          </select>
+          <span class="setting-suffix">に自動実行</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Activity Feed -->
+    <section class="card activity-card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>📝</span>
+          <span>アクティビティ</span>
+        </div>
+      </div>
+      <div class="activity-feed" id="activityList">
+        <!-- 空状態（改善版） -->
+        <div class="activity-empty" id="activityEmpty">
+          <div class="empty-illustration">
+            <span class="empty-icon">🚀</span>
+            <div class="empty-sparkles">✨</div>
+          </div>
+          <span class="empty-title">はじめよう！</span>
+          <span class="empty-text">上のボタンで値下げ or 分析</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span class="footer-version">v1.0.0</span>
+      <div class="footer-links">
+        <button class="footer-btn" id="settingsLink" title="設定">⚙️</button>
+        <button class="footer-btn" id="helpLink" title="ヘルプ">❓</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal">
+      <div class="modal-icon">⚠️</div>
+      <h3 class="modal-title">値下げを実行しますか？</h3>
+      <p class="modal-desc" id="modalDesc">
+        出品中の商品を<strong>¥100</strong>値下げします
+      </p>
+      <div class="modal-info">
+        <div class="modal-info-item">
+          <span>対象商品</span>
+          <strong id="modalItemCount">0件</strong>
+        </div>
+        <div class="modal-info-item">
+          <span>最低価格</span>
+          <strong id="modalMinPrice">¥500</strong>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="modalCancel">キャンセル</button>
+        <button class="modal-btn confirm" id="modalConfirm">実行する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

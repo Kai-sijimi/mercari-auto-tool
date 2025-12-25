@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>メルカリアシスタント - テストページ</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    
+    .card h2 {
+      color: #333;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .steps {
+      list-style: none;
+    }
+    
+    .steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .steps li:last-child {
+      border-bottom: none;
+    }
+    
+    .step-number {
+      background: linear-gradient(135deg, #4ECDC4 0%, #3DB8AF 100%);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    .step-content {
+      flex: 1;
+    }
+    
+    .step-content strong {
+      display: block;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .step-content span {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    code {
+      background: #f5f5f5;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'Consolas', monospace;
+      color: #e91e63;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #4ECDC4 0%, #3DB8AF 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(78, 205, 196, 0.4);
+    }
+    
+    .btn-secondary {
+      background: #667eea;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .feature {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .feature h3 {
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .feature p {
+      color: #666;
+      font-size: 0.85rem;
+    }
+    
+    .popup-preview {
+      background: #f5f5f5;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .popup-preview img {
+      max-width: 380px;
+      border-radius: 8px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+    
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 500;
+      margin-top: 20px;
+    }
+    
+    .status-badge.warning {
+      background: #fff3e0;
+      color: #e65100;
+    }
+    
+    .path-box {
+      background: #263238;
+      color: #4ECDC4;
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-family: 'Consolas', monospace;
+      margin: 15px 0;
+      overflow-x: auto;
+    }
+    
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🚀 メルカリアシスタント</h1>
+      <p>Chrome拡張機能 テストページ</p>
+    </header>
+    
+    <div class="card">
+      <h2>📦 インストール手順</h2>
+      <ol class="steps">
+        <li>
+          <span class="step-number">1</span>
+          <div class="step-content">
+            <strong>Chrome拡張機能ページを開く</strong>
+            <span>アドレスバーに <code>chrome://extensions/</code> と入力</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-number">2</span>
+          <div class="step-content">
+            <strong>デベロッパーモードをON</strong>
+            <span>右上のトグルスイッチをクリック</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-number">3</span>
+          <div class="step-content">
+            <strong>「パッケージ化されていない拡張機能を読み込む」をクリック</strong>
+            <span>左上に表示されるボタン</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-number">4</span>
+          <div class="step-content">
+            <strong>フォルダを選択</strong>
+            <span>以下のパスを選択してください：</span>
+            <div class="path-box">C:\Users\user\Downloads\mercari-auto-tool</div>
+          </div>
+        </li>
+        <li>
+          <span class="step-number">5</span>
+          <div class="step-content">
+            <strong>拡張機能アイコンをクリック</strong>
+            <span>ブラウザ右上の拡張機能アイコン → 「メルカリアシスタント」を選択</span>
+          </div>
+        </li>
+      </ol>
+    </div>
+    
+    <div class="card">
+      <h2>✨ 機能一覧</h2>
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">⬇️</div>
+          <h3>一括値下げ</h3>
+          <p>出品中の商品を一括で100円値下げ</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📊</div>
+          <h3>出品分析</h3>
+          <p>売上見込み・閲覧数を自動集計</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">⏰</div>
+          <h3>自動値下げ</h3>
+          <p>毎日指定時間に自動で値下げ</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📝</div>
+          <h3>アクティビティ</h3>
+          <p>操作履歴を自動で記録</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>🎮 デモモード</h2>
+      <p>現在、デモモードが有効になっています。メルカリ以外のページでも動作確認が可能です。</p>
+      <div class="status-badge">
+        <span>✓</span> デモモード有効
+      </div>
+      <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">
+        ※ 実際にメルカリで使用する場合は、<code>popup.js</code> の <code>DEMO_MODE</code> を <code>false</code> に変更してください。
+      </p>
+    </div>
+    
+    <div class="card">
+      <h2>🔗 次のステップ</h2>
+      <p style="margin-bottom: 20px;">拡張機能をインストールしたら、以下のリンクからメルカリで動作確認できます。</p>
+      <a href="https://jp.mercari.com/mypage/listings" class="btn btn-secondary" target="_blank">
+        📦 メルカリ出品一覧を開く
+      </a>
+    </div>
+  </div>
+</body>
+</html>
+
+
