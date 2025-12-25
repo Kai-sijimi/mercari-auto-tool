@@ -242,23 +242,41 @@ async function executePriceDown() {
     } else {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       
-      if (!tab.url.includes('mercari.com')) {
-        showToast('🚫 メルカリを開いてね', 'error');
+      if (!tab) {
+        showToast('🚫 タブが見つかりません', 'error');
         return;
       }
       
-      const response = await chrome.tabs.sendMessage(tab.id, {
-        action: 'priceDown',
-        minPrice: state.minPrice,
-        priceDown: state.priceDown
-      });
+      if (!tab.url || !tab.url.includes('mercari.com')) {
+        showToast('🚫 メルカリを開いてね', 'error');
+        // メルカリを開くオプション
+        if (confirm('メルカリの出品一覧を開きますか？')) {
+          chrome.tabs.create({ url: 'https://jp.mercari.com/mypage/listings' });
+        }
+        return;
+      }
       
-      if (response.success) {
-        showToast(`🔥 ${response.count}件 値下げ完了！`, 'success');
-        addActivity('値下げ実行', `${response.count}件を-¥${state.priceDown}`);
-        updateChartData();
-      } else {
-        showToast(response.message || '😢 失敗...', 'error');
+      try {
+        const response = await chrome.tabs.sendMessage(tab.id, {
+          action: 'priceDown',
+          minPrice: state.minPrice,
+          priceDown: state.priceDown
+        });
+        
+        if (response && response.success) {
+          showToast(`🔥 ${response.count}件 値下げ完了！`, 'success');
+          addActivity('値下げ実行', `${response.count}件を-¥${state.priceDown}`);
+          updateChartData();
+        } else {
+          showToast(response?.message || '😢 失敗...', 'error');
+        }
+      } catch (msgError) {
+        console.error('メッセージ送信エラー:', msgError);
+        showToast('🔄 ページを更新してね', 'error');
+        // ページをリロードするオプション
+        if (confirm('Content Scriptが読み込まれていません。\nページを更新しますか？')) {
+          chrome.tabs.reload(tab.id);
+        }
       }
     }
   } catch (error) {
@@ -302,21 +320,39 @@ async function handleAnalyze() {
     } else {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       
-      if (!tab.url.includes('mercari.com')) {
-        showToast('🚫 メルカリを開いてね', 'error');
+      if (!tab) {
+        showToast('🚫 タブが見つかりません', 'error');
         return;
       }
       
-      const response = await chrome.tabs.sendMessage(tab.id, { action: 'analyze' });
+      if (!tab.url || !tab.url.includes('mercari.com')) {
+        showToast('🚫 メルカリを開いてね', 'error');
+        if (confirm('メルカリの出品一覧を開きますか？')) {
+          chrome.tabs.create({ url: 'https://jp.mercari.com/mypage/listings' });
+        }
+        return;
+      }
       
-      if (response.success) {
-        state.totalItems = response.data.totalItems;
-        state.totalSales = response.data.totalSales;
-        await saveSettings();
-        updateStats();
-        updateChartData();
-        showToast('📊 分析完了！', 'success');
-        addActivity('出品分析', `${response.data.totalItems}件を分析`);
+      try {
+        const response = await chrome.tabs.sendMessage(tab.id, { action: 'analyze' });
+        
+        if (response && response.success) {
+          state.totalItems = response.data.totalItems;
+          state.totalSales = response.data.totalSales;
+          await saveSettings();
+          updateStats();
+          updateChartData();
+          showToast('📊 分析完了！', 'success');
+          addActivity('出品分析', `${response.data.totalItems}件を分析`);
+        } else {
+          showToast(response?.message || '😢 分析失敗...', 'error');
+        }
+      } catch (msgError) {
+        console.error('メッセージ送信エラー:', msgError);
+        showToast('🔄 ページを更新してね', 'error');
+        if (confirm('Content Scriptが読み込まれていません。\nページを更新しますか？')) {
+          chrome.tabs.reload(tab.id);
+        }
       }
     }
   } catch (error) {
